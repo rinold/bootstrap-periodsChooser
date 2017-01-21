@@ -1,7 +1,69 @@
 <!DOCTYPE html>
 <html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-</body>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+        <script src="https://use.fontawesome.com/d82f92cfc0.js"></script>
+    </head>
+    <body>
+        <div class="contatiner class="align-middle">
+            <div class="row mt-4">
+                <div class="col col-md-3"></div>
+                <div class="col col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <div id="periods-chooser" style="position: absolute; right: 0;" class="mr-2"></div>
+                            <ul id="example-mode-changer" class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#">Year</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Quarter</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Month</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="example-content" class="card-block">
+                            <div class="card">
+                                <div class="card-block">
+                                    <h4 class="card-title">Current datetime for selected period is:</h4>
+                                    <br>
+                                    From:<p id="example-from" class="card-text"></p>
+                                    To:<p id="example-to" class="card-text"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-md-3"></div>
+            </div>
+        </div>
+        <script src="https://cdn.rawgit.com/rinold/bootstrap-periodsChooser/22263c94/src/bootstrap-periods.js"></script>
+        <script>
+            $('#periods-chooser')
+            .on('periods.date.changed', function(e, date) {
+                console.log(date);
+                $('#example-from').text(date.from);
+                $('#example-to').text(date.to);
+            })
+            .periodsChooser({
+                choiceMode: 'year',
+            });
+
+            $('#example-mode-changer').on('click', '.nav-item', function () {
+                $('.nav-link.active').removeClass('active');
+                $(this).find('.nav-link').addClass('active');
+
+                var mode = $(this).text().trim().toLowerCase();
+                if (mode != 'total') {
+                    $('#periods-chooser').periodsChooser(mode);
+                }
+            });
+        </script>
+    </body>
 </html>
