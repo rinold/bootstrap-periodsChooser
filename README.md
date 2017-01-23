@@ -2,10 +2,20 @@
 Periods chooser (year, quarter, month only - not a calendar!)
 
 ## Example:
-Periods Chooser (https://rinold.github.io/bootstrap-periodsChooser/)
+Example page with [Periods Chooser](https://rinold.github.io/bootstrap-periodsChooser/)
 
-## Uses:
+#### Widget creation with default options:
+```
+$('#example-div').periodsChooser();
+```
+
+#### Changing periods mode ('year', 'quarter', 'month') after creation:
+```
+$('#example-div').periodsChooser('quarter');
+```
+
+## Requires:
 
 [Bootstrap 4](https://v4-alpha.getbootstrap.com/) 
 
-Icons provided by [Font Awesome](http://fontawesome.io/)
+[Font Awesome](http://fontawesome.io/)
