@@ -3,12 +3,14 @@
     $.fn.periodsChooser = function (options) {
         $container = $(this);
 
+        var triggerUpdateEvent = false;
         if (!$container.data('periods-opts')) {
             var opts = $.extend(true, {}, $.fn.periodsChooser.defaults, options);
             $container.attr('data-periods-opts', '');
             $container.data('periods-opts', opts);
         }
         else {
+            triggerUpdateEvent = true;
             var opts = $container.data('periods-opts');
             if (['month', 'quarter', 'year'].includes(options)) {
                 opts.choiceMode = options;
@@ -18,7 +20,7 @@
             }
             $container.data('periods-opts', opts);
         }
-        $container.html('');
+        $container.empty();
 
         var $chooser = $('<div>', {
             'class': 'periods-container btn-group',
@@ -137,7 +139,7 @@
                             'data-quarter': i,
                         },
                     })
-                    .appendTo($choiceGroup);
+                    .appendTo($itemsGroup);
 
                     if (i == date.getQuarter()) {
                         $quarter.addClass('active');
@@ -146,12 +148,6 @@
             }
 
             function createMonthChoices($choiceGroup) {
-                var monthNames = [
-                    "Jan", "Feb", "Mar", "Apr",
-                    "May", "Jun", "Jul", "Aug",
-                    "Sep", "Oct", "Nov", "Dec"
-                ];
-
                 for (var n = 0; n < 3; n++) {
                     var $itemsGroup = $('<div>', {
                         'class': "periods-month-group btn-group w-100 px-2",
@@ -160,9 +156,10 @@
 
                     for (var m = 0; m < 4; m++) {
                         var i = m + 4 * n;
+                        var supI = (i < 9) ? '0' : '';
                         var $month = $('<button>', {
                             'class': sizedBtnClass + ' periods-choice w-25',
-                            html: monthNames[i] + ' <sup>' + (i + 1) + '</sup>' ,
+                            html: $.fn.periodsChooser.monthNames[i] + ' <sup>' + supI + (i + 1) + '</sup>' ,
                             attr: {
                                 'data-month': i,
                             },
@@ -240,7 +237,7 @@
         .append($fromDropdown)
         .append($fromToArrow)
         .append($toDropdown)
-        .appendTo(this);
+        .appendTo($container);
 
         updateDropdownText($fromDropdown);
         updateDropdownText($toDropdown);
@@ -272,7 +269,7 @@
             var startDate = new Date(startYear, startMonth, 1);
             var endDate = new Date(endYear, endMonth + 1, 0, 23, 59, 59, 999);
 
-            $this.trigger('periods.date.changed', {
+            $container.trigger('periods.date.changed', {
                 from: startDate,
                 to: endDate,
             });
@@ -284,9 +281,18 @@
             $chooser.find('.periods-togglable').hide();
         }
 
-        dateChanged();
-        return this;
+        if (triggerUpdateEvent) {
+            dateChanged();
+        }
+
+        return $container;
     };
+
+    $.fn.periodsChooser.monthNames = [
+        "Jan", "Feb", "Mar", "Apr",
+        "May", "Jun", "Jul", "Aug",
+        "Sep", "Oct", "Nov", "Dec"
+    ];
 
     $.fn.periodsChooser.defaults = {
         choiceMode: 'month', // year, quarter, month
@@ -296,7 +302,7 @@
         rangeToggle: true,
         rangeToggleDefault: false,
         // Bootstrap classes styling
-        buttonSize: 'sm', // default (''), 'sm' or 'lg' TODO: remove 'sm', should be ''
+        buttonSize: 'sm', // could be '', 'sm' or 'lg'
         buttonClass: 'secondary',
         // Dropdown date formatters
         formatDropdownDate: {
@@ -307,6 +313,9 @@
                 return 'Q' + quarter + '\'' + year.toString().substring(2, 4);
             },
             month: function (year, month) {
+                return $.fn.periodsChooser.monthNames[month] + ' ' + year.toString().substring(2, 4);
+            },
+            month_num: function (year, month) {
                 var zero = (month < 9) ? '0' : '';
                 return zero + (month + 1).toString() + '/' + year.toString().substring(2, 4);
             },
